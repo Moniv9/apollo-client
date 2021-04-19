@@ -478,6 +478,7 @@ export class InMemoryCache extends ApolloCache<NormalizedCacheObject> {
     c: Cache.WatchOptions,
     options?: BroadcastOptions,
   ) {
+    const { lastDiff } = c;
     const diff = this.diff<any>({
       query: c.query,
       variables: c.variables,
@@ -491,15 +492,15 @@ export class InMemoryCache extends ApolloCache<NormalizedCacheObject> {
       }
 
       if (options.onWatchUpdated &&
-          options.onWatchUpdated.call(this, c, diff) === false) {
+          options.onWatchUpdated.call(this, c, diff, lastDiff) === false) {
         // Returning false from the onWatchUpdated callback will prevent
         // calling c.callback(diff) for this watcher.
         return;
       }
     }
 
-    if (!c.lastDiff || c.lastDiff.result !== diff.result) {
-      c.callback(c.lastDiff = diff);
+    if (!lastDiff || lastDiff.result !== diff.result) {
+      c.callback(c.lastDiff = diff, lastDiff);
     }
   }
 }
