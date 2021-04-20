@@ -345,6 +345,7 @@ export class InMemoryCache extends ApolloCache<NormalizedCacheObject> {
       transaction,
       optimistic = true,
       removeOptimistic,
+      onWatchUpdated,
     } = options;
 
     const perform = (layer?: EntityStore) => {
@@ -362,7 +363,6 @@ export class InMemoryCache extends ApolloCache<NormalizedCacheObject> {
       }
     };
 
-    const { onWatchUpdated } = options;
     const alreadyDirty = new Set<Cache.WatchOptions>();
 
     if (onWatchUpdated && !this.txCount) {
